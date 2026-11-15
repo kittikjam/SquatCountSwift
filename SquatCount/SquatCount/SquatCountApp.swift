@@ -4,7 +4,7 @@ import SwiftUI
 struct SquatCountApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
