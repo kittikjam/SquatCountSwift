@@ -7,8 +7,6 @@ struct TrainView: View {
     @State private var tolerance = 5.0
     @State private var linksSides = true
     @State private var repetitionTarget = 10
-    @State private var assessmentMode = 0
-    @State private var notes = ""
 
     var body: some View {
         NavigationStack {
@@ -18,6 +16,7 @@ struct TrainView: View {
                     targetArtwork
                     variationSection
                     targetSection
+                    startButton
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
@@ -169,6 +168,24 @@ struct TrainView: View {
                     .labelsHidden()
                 }
             }
+        }
+    }
+
+    private var startButton: some View {
+        Button {
+            presentsSession = true
+        } label: {
+            HStack {
+                Text("Start session")
+                Spacer()
+                Image(systemName: "arrow.up.right")
+            }
+            .font(.system(size: 17, weight: .bold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 20)
+            .frame(height: 58)
+            .background(AppTheme.ink)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
     }
 }
