@@ -1,10 +1,3 @@
-//
-//  SquatCountUITests.swift
-//  SquatCountUITests
-//
-//  Created by James Kitto on 15/11/2026.
-//
-
 import XCTest
 
 final class SquatCountUITests: XCTestCase {
