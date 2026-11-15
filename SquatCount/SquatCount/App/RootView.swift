@@ -5,7 +5,7 @@ struct RootView: View {
         TabView {
             ContentView()
                 .tabItem {
-                    Label("Train", systemImage: "house")
+                    Label("Train", systemImage: "weightlifter")
                 }
 
             ContentView()
