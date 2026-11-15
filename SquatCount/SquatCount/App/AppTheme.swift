@@ -10,7 +10,7 @@ enum AppTheme {
 
     enum Typography {
         static let sectionLabel: Font = .system(size: 12, weight: .semibold, design: .rounded)
-        static let displayTitle: Font = .system(size: 44, weight: .black, design: .rounded)
+        static let displayTitle: Font = .system(size: 44, weight: .black)
         static let body: Font = .system(size: 17)
         static let sheetTitle: Font = .title
     }
