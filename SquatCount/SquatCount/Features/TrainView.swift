@@ -3,8 +3,10 @@ import SwiftUI
 struct TrainView: View {
     @State private var presentsSession = false
     @State private var kneeTarget = 90.0
+    @State private var rightKneeTarget = 90.0
     @State private var tolerance = 5.0
     @State private var linksSides = true
+    @State private var repetitionTarget = 10
     @State private var assessmentMode = 0
     @State private var notes = ""
 
@@ -15,6 +17,7 @@ struct TrainView: View {
                     header
                     targetArtwork
                     variationSection
+                    targetSection
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
@@ -83,6 +86,108 @@ struct TrainView: View {
                         .foregroundColor(.secondary)
                 }
             }
+        }
+    }
+
+    private var targetSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Your target")
+                    .sectionLabel()
+
+                Spacer()
+
+                Toggle(
+                    "Link sides",
+                    isOn: Binding(
+                        get: { linksSides },
+                        set: { isLinked in
+                            linksSides = isLinked
+                            if isLinked {
+                                rightKneeTarget = kneeTarget
+                            }
+                        }
+                    )
+                )
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .fixedSize()
+                .tint(AppTheme.accent)
+            }
+
+            SurfaceCard {
+                AngleSlider(
+                    title: "Left knee target",
+                    value: Binding(
+                        get: { kneeTarget },
+                        set: { newTarget in
+                            kneeTarget = newTarget
+                            if linksSides {
+                                rightKneeTarget = newTarget
+                            }
+                        }
+                    )
+                )
+
+                if !linksSides {
+                    Divider()
+                        .padding(.vertical, 8)
+
+                    AngleSlider(
+                        title: "Right knee target",
+                        value: $rightKneeTarget
+                    )
+                }
+
+                Divider()
+                    .padding(.vertical, 8)
+
+                VStack(spacing: 6) {
+                    HStack {
+                        Label("Permitted tolerance", systemImage: "slider.horizontal.3")
+                        Spacer()
+                        Text("±\(tolerance, specifier: "%.0f")°")
+                            .fontWeight(.bold)
+                    }
+
+                    Slider(value: $tolerance, in: 0...15, step: 1)
+                        .tint(AppTheme.accent)
+                }
+
+                Divider()
+                    .padding(.vertical, 8)
+
+                HStack {
+                    Label("Repetition target", systemImage: "repeat")
+                    Spacer()
+                    Picker("Repetitions", selection: $repetitionTarget) {
+                        ForEach([5, 8, 10, 12, 15, 20], id: \.self) { count in
+                            Text("\(count) reps")
+                                .tag(count)
+                        }
+                    }
+                    .labelsHidden()
+                }
+            }
+        }
+    }
+}
+
+private struct AngleSlider: View {
+    let title: String
+    @Binding var value: Double
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Label(title, systemImage: "angle")
+                Spacer()
+                Text("≤ \(value, specifier: "%.0f")°")
+                    .fontWeight(.bold)
+            }
+
+            Slider(value: $value, in: 70...165, step: 5)
+                .tint(AppTheme.accent)
         }
     }
 }
