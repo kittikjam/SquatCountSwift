@@ -8,12 +8,12 @@ struct RootView: View {
                     Label("Train", systemImage: "dumbbell")
                 }
 
-            ContentView()
+            ProgressView()
                 .tabItem {
                     Label("Progress", systemImage: "gear")
                 }
 
-            ContentView()
+            ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person")
         }

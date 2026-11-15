@@ -12,8 +12,9 @@ struct TrainView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 18)
                 .padding(.bottom, 32)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .background(AppTheme.canvas)
+            .background(AppTheme.canvas.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $presentsSession) {
                 Text("Workout session")
