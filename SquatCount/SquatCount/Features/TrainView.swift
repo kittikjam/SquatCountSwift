@@ -8,6 +8,15 @@ struct TrainView: View {
     @State private var linksSides = true
     @State private var repetitionTarget = 10
 
+    @State private var selectedExercise = "Squat"
+
+    private let exercises = [
+        "Squat",
+        "Goblet squat",
+        "Sumo squat",
+        "Split squat"
+    ]
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -64,17 +73,26 @@ struct TrainView: View {
             }
     }
 
-    private var variationSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Exercise variation")
-                .sectionLabel()
+private var variationSection: some View {
+    VStack(alignment: .leading, spacing: 10) {
+        Text("Exercise variation")
+            .sectionLabel()
 
-            SurfaceCard {
+        SurfaceCard {
+            Menu {
+                ForEach(exercises, id: \.self) { exercise in
+                    Button {
+                        selectedExercise = exercise
+                    } label: {
+                        Text(exercise)
+                    }
+                }
+            } label: {
                 HStack(spacing: 12) {
                     Image(systemName: "figure.strengthtraining.traditional")
                         .foregroundColor(AppTheme.accent)
 
-                    Text("Squat")
+                    Text(selectedExercise)
                         .fontWeight(.semibold)
                         .foregroundColor(AppTheme.ink)
 
@@ -84,9 +102,13 @@ struct TrainView: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
         }
     }
+}
 
     private var targetSection: some View {
         VStack(alignment: .leading, spacing: 10) {
