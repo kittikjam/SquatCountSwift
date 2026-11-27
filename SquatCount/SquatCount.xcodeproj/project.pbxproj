@@ -396,6 +396,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SquatCount/Preview Content\"";
+				DEVELOPMENT_TEAM = B747MQN92T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "SquatCount uses the camera to track your movement during workouts.";
@@ -425,6 +426,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SquatCount/Preview Content\"";
+				DEVELOPMENT_TEAM = B747MQN92T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "SquatCount uses the camera to track your movement during workouts.";
