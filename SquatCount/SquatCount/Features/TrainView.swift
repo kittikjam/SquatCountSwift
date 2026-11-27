@@ -21,10 +21,8 @@ struct TrainView: View {
             }
             .background(AppTheme.canvas.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $presentsSession) {
-                Text("Workout session")
-                    .sheetTitle()
-                    .padding()
+            .fullScreenCover(isPresented: $presentsSession) {
+                CameraSessionView(configuration: configuration)
             }
         }
     }
