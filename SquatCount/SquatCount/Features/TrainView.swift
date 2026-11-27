@@ -2,20 +2,7 @@ import SwiftUI
 
 struct TrainView: View {
     @State private var presentsSession = false
-    @State private var kneeTarget = 90.0
-    @State private var rightKneeTarget = 90.0
-    @State private var tolerance = 5.0
-    @State private var linksSides = true
-    @State private var repetitionTarget = 10
-
-    @State private var selectedExercise = "Squat"
-
-    private let exercises = [
-        "Squat",
-        "Goblet squat",
-        "Sumo squat",
-        "Split squat"
-    ]
+    @State private var configuration = ExerciseConfiguration.initial
 
     var body: some View {
         NavigationStack {
@@ -34,10 +21,8 @@ struct TrainView: View {
             }
             .background(AppTheme.canvas.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $presentsSession) {
-                Text("Workout session")
-                    .sheetTitle()
-                    .padding()
+            .fullScreenCover(isPresented: $presentsSession) {
+                CameraSessionView(configuration: configuration)
             }
         }
     }
@@ -57,7 +42,7 @@ struct TrainView: View {
     }
 
     private var targetArtwork: some View {
-        Text("PERSONAL DEPTH  ≤ \(kneeTarget, specifier: "%.0f")°")
+        Text("PERSONAL DEPTH  ≤ \(configuration.leftKneeTarget, specifier: "%.0f")°")
             .font(.system(size: 12, weight: .bold, design: .rounded))
             .tracking(0.5)
             .foregroundColor(AppTheme.ink)
@@ -73,42 +58,42 @@ struct TrainView: View {
             }
     }
 
-private var variationSection: some View {
-    VStack(alignment: .leading, spacing: 10) {
-        Text("Exercise variation")
-            .sectionLabel()
+    private var variationSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Exercise variation")
+                .sectionLabel()
 
-        SurfaceCard {
-            Menu {
-                ForEach(exercises, id: \.self) { exercise in
-                    Button {
-                        selectedExercise = exercise
-                    } label: {
-                        Text(exercise)
+            SurfaceCard {
+                Menu {
+                    ForEach(ExerciseVariation.allCases) { variation in
+                        Button {
+                            configuration.variation = variation
+                        } label: {
+                            Text(variation.title)
+                        }
                     }
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "figure.strengthtraining.traditional")
+                            .foregroundColor(AppTheme.accent)
+
+                        Text(configuration.variation.title)
+                            .fontWeight(.semibold)
+                            .foregroundColor(AppTheme.ink)
+
+                        Spacer()
+
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "figure.strengthtraining.traditional")
-                        .foregroundColor(AppTheme.accent)
-
-                    Text(selectedExercise)
-                        .fontWeight(.semibold)
-                        .foregroundColor(AppTheme.ink)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.up.chevron.down")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
-}
 
     private var targetSection: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -121,12 +106,9 @@ private var variationSection: some View {
                 Toggle(
                     "Link sides",
                     isOn: Binding(
-                        get: { linksSides },
+                        get: { configuration.targetsLinked },
                         set: { isLinked in
-                            linksSides = isLinked
-                            if isLinked {
-                                rightKneeTarget = kneeTarget
-                            }
+                            configuration.setTargetsLinked(isLinked)
                         }
                     )
                 )
@@ -140,23 +122,20 @@ private var variationSection: some View {
                 AngleSlider(
                     title: "Left knee target",
                     value: Binding(
-                        get: { kneeTarget },
+                        get: { configuration.leftKneeTarget },
                         set: { newTarget in
-                            kneeTarget = newTarget
-                            if linksSides {
-                                rightKneeTarget = newTarget
-                            }
+                            configuration.setLeftKneeTarget(newTarget)
                         }
                     )
                 )
 
-                if !linksSides {
+                if !configuration.targetsLinked {
                     Divider()
                         .padding(.vertical, 8)
 
                     AngleSlider(
                         title: "Right knee target",
-                        value: $rightKneeTarget
+                        value: $configuration.rightKneeTarget
                     )
                 }
 
@@ -167,11 +146,11 @@ private var variationSection: some View {
                     HStack {
                         Label("Permitted tolerance", systemImage: "slider.horizontal.3")
                         Spacer()
-                        Text("±\(tolerance, specifier: "%.0f")°")
+                        Text("±\(configuration.tolerance, specifier: "%.0f")°")
                             .fontWeight(.bold)
                     }
 
-                    Slider(value: $tolerance, in: 0...15, step: 1)
+                    Slider(value: $configuration.tolerance, in: 0...15, step: 1)
                         .tint(AppTheme.accent)
                 }
 
@@ -181,7 +160,7 @@ private var variationSection: some View {
                 HStack {
                     Label("Repetition target", systemImage: "repeat")
                     Spacer()
-                    Picker("Repetitions", selection: $repetitionTarget) {
+                    Picker("Repetitions", selection: $configuration.repetitionTarget) {
                         ForEach([5, 8, 10, 12, 15, 20], id: \.self) { count in
                             Text("\(count) reps")
                                 .tag(count)
